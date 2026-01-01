@@ -113,7 +113,7 @@
 
 .article-content .highlight .gutter pre,
 .article-content .gist .gist-file .gist-data .line-numbers {
-  color: #4B5363;
+  color: #000000;
   font-size: 0.85em;
 }
 .article-content img {
@@ -148,7 +148,7 @@
 }
 .article-content .highlight figcaption {
   font-size: 0.85em;
-  color: #1d0101;
+  color: #999;
   line-height: 1em;
   margin-bottom: 1em;
 }
