@@ -16,11 +16,18 @@ function getCurrentGallery(galleries, pageTitle) {
             return galleries[i];
         }
     }
+    return null;
 }
-var currentGallery = getCurrentGallery(galleries, pageTitle)
+var currentGallery = getCurrentGallery(galleries, pageTitle);
 
-var photos = currentGallery.photos;
+var photos = [];
 var galleryImageStr = theme.jsDelivr.url ? theme.jsDelivr.url : '';
+var galleryPassword = '';
+
+if (currentGallery) {
+    photos = currentGallery.photos || [];
+    galleryPassword = currentGallery.password || '';
+}
 
 let imageStr = ''
 
@@ -39,20 +46,26 @@ for (var i = 0, len = photos.length; i < len; i++) {
 
 <div class="container">
     <div class="photo-wrapper">
-        <% if (page.password ) { %>
-
-            <script src="/js/crypto-js.js"></script>
-            <script src="/js/gallery-encrypt.js"></script>
-            <div id="hbe-security">
-                <div class="hbe-input-container">
-                    <input type="password" class="hbe-form-control" id="pass"  placeholder="请输入密码查看内容"/>
-                    <a href="javascript:;" class="btn-decrypt" id="btn_decrypt">解密</a>
+        <% if (galleryPassword) { %>
+            <div class="gallery-password-overlay" id="galleryPasswordOverlay">
+                <div class="gallery-password-modal">
+                    <button class="gallery-password-close" id="galleryPasswordClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="gallery-password-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="gallery-password-title">加密相册</h3>
+                    <p class="gallery-password-desc">请输入密码查看内容</p>
+                    <div class="gallery-password-input-wrapper">
+                        <input type="password" id="galleryPasswordInput" placeholder="请输入密码" autocomplete="off">
+                        <button class="gallery-password-btn" id="galleryPasswordBtn">确认</button>
+                    </div>
+                    <p class="gallery-password-error" id="galleryPasswordError">密码错误，请重试</p>
                 </div>
             </div>
-            <div  id="mygallery">
-                <div class="waterfall" id="encrypt-blog" style="display:none">
-                    <%- aes(imageStr, page.password) %>
-                </div>
+            <div class="waterfall" id="encrypt-blog" style="display:none;">
+                <%- imageStr %>
             </div>
         <% } else { %>
             <div class="waterfall" id="encrypt-blog">
@@ -65,8 +78,50 @@ for (var i = 0, len = photos.length; i < len; i++) {
 <script src="<%- theme.jsDelivr.url %><%- url_for(theme.libs.js.fancybox) %>"></script>
 <script src="<%- theme.jsDelivr.url %><%- url_for(theme.libs.js.justifiedGallery) %>"></script>
 <script>
-
-    $("a[rel=example_group]").fancybox();
-    $("#encrypt-blog").justifiedGallery({margins: 5, rowHeight: 150});
-
+    $(document).ready(function() {
+        var correctPassword = '<%= galleryPassword %>';
+        var passwordOverlay = $('#galleryPasswordOverlay');
+        var passwordInput = $('#galleryPasswordInput');
+        var passwordBtn = $('#galleryPasswordBtn');
+        var passwordClose = $('#galleryPasswordClose');
+        var passwordError = $('#galleryPasswordError');
+        var encryptBlog = $('#encrypt-blog');
+        
+        passwordError.hide();
+        
+        function checkPassword() {
+            var inputPassword = passwordInput.val().trim();
+            if (inputPassword === correctPassword) {
+                passwordOverlay.fadeOut(300);
+                setTimeout(function() {
+                    encryptBlog.show();
+                    encryptBlog.justifiedGallery({margins: 5, rowHeight: 200});
+                    $("a[rel=example_group]").fancybox();
+                }, 300);
+            } else {
+                passwordError.fadeIn(300);
+                passwordInput.addClass('error');
+                setTimeout(function() {
+                    passwordInput.removeClass('error');
+                }, 500);
+            }
+        }
+        
+        passwordBtn.click(checkPassword);
+        
+        passwordClose.click(function() {
+            passwordOverlay.fadeOut(300);
+        });
+        
+        passwordInput.keypress(function(e) {
+            if (e.keyCode === 13) {
+                checkPassword();
+            }
+        });
+    });
+    
+    if (!$('#galleryPasswordOverlay').length) {
+        $("a[rel=example_group]").fancybox();
+        $("#encrypt-blog").justifiedGallery({margins: 5, rowHeight: 200});
+    }
 </script>

@@ -1,14 +1,37 @@
 [
   {
-    "name": "光影流年",
-    "cover": "/medias/featureimages/0.jpg"
-  },
-  {
     "name": "2026",
-    "cover": "/medias/featureimages/1.jpg"
+    "cover": "/images/2026-06/202606天津.jpg",
+    "description": "旅行与生活",
+    "photos": [
+      "/images/2026-06/202606出发.jpg",
+      "/images/2026-06/202606天津.jpg",
+      "/images/2026-06/202606桔梗.jpg",
+      "/images/2026-06/202606归程.jpg",
+      "/images/2026-06/IMG_20260606_天津黄昏.jpg",
+      "/images/2026-06/IMG_20260608_174504.jpg",
+      "/images/2026-07/IMG_20260704_082542_去天津机票.jpg",
+      "/images/2026-07/IMG_20260704_091146_廊桥1.jpg",
+      "/images/2026-07/IMG_20260704_091931_行李托运.jpg",
+      "/images/2026-07/IMG_20260704_095452_起飞.jpg",
+      "/images/2026-07/IMG_20260704_122339_天津最高楼.jpg",
+      "/images/2026-07/IMG_20260704_123126_到达天津.jpg",
+      "/images/2026-07/IMG_20260705_084420_豆腐脑.jpg",
+      "/images/2026-07/IMG_20260705_101240_海边.jpg",
+      "/images/2026-07/IMG_20260705_101514_海边.jpg",
+      "/images/2026-07/IMG_20260705_175519_空中看到学校.jpg",
+      "/images/2026-07/IMG_20260705_184709_这是什么云.jpg",
+      "/images/2026-07/IMG_20260705_184742.jpg",
+      "/images/2026-07/IMG_20260705_193822_晚霞.jpg"
+    ]
   },
   {
     "name": "private",
-    "cover": "/medias/featureimages/2.jpg"
+    "cover": "/images/2026-07/IMG_20260705_193822_晚霞.jpg",
+    "description": "加密照片, 密码: f*y**1**6",
+    "photos": [
+      "/images/2026-07/IMG_20260705_193822_晚霞.jpg"
+    ],
+    "password": "fuyao1006"
   }
 ]
