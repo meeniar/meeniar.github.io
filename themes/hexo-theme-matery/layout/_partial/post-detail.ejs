@@ -136,6 +136,7 @@
 
             <%- partial('_partial/reprint-statement') %>
 
+            <% if (false) { %>
             <div class="tag_share" style="display: block;">
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     <% if (page.tags && page.tags.length) { %>
@@ -156,6 +157,7 @@
                     <%- partial('_partial/share') %>
                 </div>
             </div>
+            <% } %>
             <% if (theme.reward && theme.reward.enable) { %>
                 <%- partial('_partial/reward') %>
             <% } %>
