@@ -50,9 +50,9 @@ menu:
 # 站点运行开始时间.
 time:
   enable: true
-  year: 2026 # 年份
-  month: 07 # 月份
-  date: 11 # 日期
+  year: 2023 # 年份
+  month: 12 # 月份
+  date: 10 # 日期
   hour: 00 # 小时
   minute: 00 # 分钟
   second: 00 # 秒
@@ -100,9 +100,9 @@ music:
   loop: 'all'       # 音频循环播放, 可选值: 'all', 'one', 'none'
   order: 'random'   # 音频循环顺序, 可选值: 'list', 'random'
   preload: 'auto'   # 预加载，可选值: 'none', 'metadata', 'auto'
-  volume: 0.7       # 默认音量，请注意播放器会记忆用户设置，用户手动设置音量后默认音量即失效
+  volume: 0.5       # 默认音量，请注意播放器会记忆用户设置，用户手动设置音量后默认音量即失效
   listFolded: true  # 列表默认折叠
-  hideLrc: true     # 隐藏歌词
+  hideLrc: false     # 隐藏歌词
 
 # Whether to display the musics.
 # 单独的音乐页面.
