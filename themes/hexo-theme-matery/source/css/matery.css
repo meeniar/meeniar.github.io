@@ -2059,7 +2059,7 @@ p.search-result-summary{
 .nav-item:hover > a,
 .nav-item.nav-show > a {
     transform: translateY(-2px);
-    background: rgba(255,255,255,.75);
+    background: rgba(255,255,255,.25);
     box-shadow: 0 10px 24px rgba(0,0,0,.12);
     border-radius: 999px;
 }
