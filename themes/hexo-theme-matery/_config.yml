@@ -90,12 +90,12 @@ music:
   title:
     enable: true
     show: 听听音乐
-  autoHide: true    # hide automaticaly
+  autoHide: false    # hide automaticaly
   server: netease   #require	music platform: netease, tencent, kugou, xiami, baidu
-  type: song       #require song, playlist, album, search, artist
-  id: 526485070     # Between the Stars
+  type: song        #require song, playlist, album, search, artist
+  id: 29043512      # Between the Stars
   fixed: true       # 开启吸底模式
-  autoplay: false   # 是否自动播放
+  autoplay: true   # 是否自动播放
   theme: '#42b983'
   loop: 'all'       # 音频循环播放, 可选值: 'all', 'one', 'none'
   order: 'random'   # 音频循环顺序, 可选值: 'list', 'random'
@@ -115,7 +115,7 @@ musics:
   type: playlist    #require song, playlist, album, search, artist
   id: 1776127550     #require song id / playlist id / album id / search keyword
   fixed: false      # 开启吸底模式
-  autoplay: true   # 是否自动播放
+  autoplay: true    # 是否自动播放
   theme: '#42b983'
   loop: 'all'       # 音频循环播放, 可选值: 'all', 'one', 'none'
   order: 'random'   # 音频循环顺序, 可选值: 'list', 'random'
