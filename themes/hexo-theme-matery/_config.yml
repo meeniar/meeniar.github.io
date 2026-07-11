@@ -13,10 +13,10 @@ menu:
   Archives:
     url: /archives
     icon: fas fa-archive
-  musics:
+  Musics:
     url: /musics
     icon: fas fa-music
-  galleries:
+  Galleries:
     url: /galleries
     icon: fas fa-images
   # 二级菜单写法如下
