@@ -267,7 +267,24 @@
 <div class="container">
     <div class="photo-wrapper">
         
-            <div class="waterfall" id="encrypt-blog">
+            <div class="gallery-password-overlay" id="galleryPasswordOverlay">
+                <div class="gallery-password-modal">
+                    <button class="gallery-password-close" id="galleryPasswordClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="gallery-password-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="gallery-password-title">加密相册</h3>
+                    <p class="gallery-password-desc">请输入密码查看内容</p>
+                    <div class="gallery-password-input-wrapper">
+                        <input type="password" id="galleryPasswordInput" placeholder="请输入密码" autocomplete="off">
+                        <button class="gallery-password-btn" id="galleryPasswordBtn">确认</button>
+                    </div>
+                    <p class="gallery-password-error" id="galleryPasswordError">密码错误，请重试</p>
+                </div>
+            </div>
+            <div class="waterfall" id="encrypt-blog" style="display:none;">
                 <a href="/images/2026-06/202606出发.jpg"     class="photo-item" rel="example_group"     data-fancybox="images">      <img src="/images/2026-06/202606出发.jpg"       alt=/images/2026-06/202606出发.jpg>
     </a><a href="/images/2026-06/202606天津.jpg"     class="photo-item" rel="example_group"     data-fancybox="images">      <img src="/images/2026-06/202606天津.jpg"       alt=/images/2026-06/202606天津.jpg>
     </a><a href="/images/2026-06/202606桔梗.jpg"     class="photo-item" rel="example_group"     data-fancybox="images">      <img src="/images/2026-06/202606桔梗.jpg"       alt=/images/2026-06/202606桔梗.jpg>
@@ -296,7 +313,7 @@
 <script src="/libs/justifiedGallery/justifiedGallery.min.js"></script>
 <script>
     $(document).ready(function() {
-        var correctPassword = '';
+        var correctPassword = 'fuyao1006';
         var passwordOverlay = $('#galleryPasswordOverlay');
         var passwordInput = $('#galleryPasswordInput');
         var passwordBtn = $('#galleryPasswordBtn');
