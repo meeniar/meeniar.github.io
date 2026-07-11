@@ -151,8 +151,8 @@ recommend:
 
 # Configure website favicon and LOGO
 # 配置网站favicon和网站LOGO
-favicon: /favicon.png
-logo: /medias/comment_bg.png
+favicon: /favicon1.png
+logo: /medias/favicon.png
 
 # The configuration of the second button in the home banner,
 # including the display name of the button, the font awesome icon, and the hyperlink to the button.
@@ -392,7 +392,7 @@ valine:
   avatar: 'mm' # Gravatar style : mm/identicon/monsterid/wavatar/retro/hide
   pageSize: 10
   placeholder: 'just go go' # Comment Box placeholder
-  background: /medias/comment_bg.png
+  background: /medias/favicon.png
   coolpushkey: 
 
 # The configuration of the Waline comment module is not activated by default.
