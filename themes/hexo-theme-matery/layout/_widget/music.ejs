@@ -28,11 +28,34 @@
 
     <%}%>
 
-    /* 手机端播放器上移 1/4 */
-    @media only screen and (max-width: 600px) {
-        .aplayer.aplayer-fixed {
-            bottom: 25vh !important;
-        }
+    #persistent-music-player,
+    #persistent-music-player > div,
+    #persistent-music-player .row,
+    #persistent-music-player meting-js,
+    #persistent-music-player .aplayer.aplayer-fixed {
+        background: transparent !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+
+    #persistent-music-player .aplayer.aplayer-fixed .aplayer-body {
+        bottom: 20vh !important;
+    }
+
+    #persistent-music-player .aplayer.aplayer-fixed .aplayer-list {
+        bottom: calc(20vh + 66px) !important;
+        margin: 0 !important;
+        transform: none !important;
+    }
+
+    #persistent-music-player .aplayer.aplayer-fixed .aplayer-lrc {
+        bottom: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
     }
 </style>
 <div class="<% if(!theme.music.fixed) { %>music-player<% } %>">
@@ -42,12 +65,13 @@
         </div>
     <% } %>
     <div class="row">
-        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+        <meting-js class="persistent-meting-player col l8 offset-l2 m10 offset-m1 s12"
+                   data-persistent-player="true"
                    server="<%- theme.music.server %>"
                    type="<%- theme.music.type %>"
                    id="<%- theme.music.id %>"
                    fixed='<%- theme.music.fixed ? 'true' : 'false' %>'
-                   autoplay='<%- theme.music.autoplay === true %>'
+                   autoplay='<%- page.layout === 'musics' || page.type === 'musics' ? 'false' : theme.music.autoplay === true %>'
                    theme='<%- theme.music.theme %>'
                    loop='<%- theme.music.loop %>'
                    order='<%- theme.music.order %>'

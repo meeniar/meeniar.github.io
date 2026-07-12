@@ -2,7 +2,7 @@
   {
     "name": "2026",
     "cover": "/images/2026-06/202606天津.jpg",
-    "description": "旅行与生活",
+    "description": "旅行与生活 密码: f********",
     "photos": [
       "/images/2026-06/202606出发.jpg",
       "/images/2026-06/202606天津.jpg",
@@ -22,12 +22,13 @@
       "/images/2026-07/IMG_20260705_184709_这是什么云.jpg",
       "/images/2026-07/IMG_20260705_184742.jpg",
       "/images/2026-07/IMG_20260705_193822_晚霞.jpg"
-    ]
+    ],
+    "password": "fuyao1006"
   },
   {
     "name": "private",
     "cover": "/images/2026-07/IMG_20260705_193822_晚霞.jpg",
-    "description": "密码: f*******6",
+    "description": "密码: f********",
     "photos": [
       "/images/2026-07/IMG_20260705_193822_晚霞.jpg"
     ],
