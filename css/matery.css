@@ -7,13 +7,20 @@
 
     /* 移动端隐藏 logo 图标，只显示文字，避免换行 */
     header .brand-logo .logo-img {
-        display: none;
+        display: none !important;
     }
 
     /* 移动端 logo 文字居中 */
+    header .brand-logo {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 100% !important;
+    }
+
     header .brand-logo .logo-span {
-        width: 100%;
-        text-align: center;
+        width: 100% !important;
+        text-align: center !important;
+        display: block !important;
     }
 }
 
