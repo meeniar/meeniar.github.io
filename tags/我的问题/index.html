@@ -225,12 +225,18 @@
 
         setTimeout(restorePosition, 500);
 
+        // 拖拽阈值（移动超过这个距离才认为是拖拽）
+        var DRAG_THRESHOLD = 10;
+        var hasDragged = false;
+
         // 鼠标/触摸事件处理
         function onDragStart(e) {
+            // 排除播放按钮点击
             if (e.target.closest && e.target.closest('.aplayer-button')) return;
             if (e.target.classList && e.target.classList.contains('aplayer-button')) return;
 
             isDragging = true;
+            hasDragged = false;
             aplayerBody.style.cursor = 'grabbing';
             startBottom = currentBottom;
 
@@ -241,8 +247,6 @@
                 startX = e.clientX;
                 startY = e.clientY;
             }
-
-            e.preventDefault();
         }
 
         function onDragMove(e) {
@@ -260,11 +264,17 @@
             var deltaX = clientX - startX;
             var deltaY = startY - clientY;
 
-            var vhPerPixel = 100 / window.innerHeight;
-            var deltaVh = deltaY * vhPerPixel;
+            // 只有移动超过阈值才认为是拖拽，并阻止默认行为
+            if (Math.abs(deltaX) > DRAG_THRESHOLD || Math.abs(deltaY) > DRAG_THRESHOLD) {
+                hasDragged = true;
+                e.preventDefault();
+            }
 
-            setDragPosition(deltaX, startBottom + deltaVh);
-            e.preventDefault();
+            if (hasDragged) {
+                var vhPerPixel = 100 / window.innerHeight;
+                var deltaVh = deltaY * vhPerPixel;
+                setDragPosition(deltaX, startBottom + deltaVh);
+            }
         }
 
         function onDragEnd(e) {
@@ -272,9 +282,11 @@
             isDragging = false;
             aplayerBody.style.cursor = 'grab';
 
-            // 获取当前拖拽后的垂直位置
-            var currentBottomVh = parseFloat(aplayerBody.style.bottom) || currentBottom;
-            snapToLeft(currentBottomVh);
+            // 只有真正拖拽过才吸附回左侧
+            if (hasDragged) {
+                var currentBottomVh = parseFloat(aplayerBody.style.bottom) || currentBottom;
+                snapToLeft(currentBottomVh);
+            }
         }
 
         // 绑定事件
@@ -282,7 +294,7 @@
         document.addEventListener('mousemove', onDragMove);
         document.addEventListener('mouseup', onDragEnd);
 
-        aplayerBody.addEventListener('touchstart', onDragStart, { passive: false });
+        aplayerBody.addEventListener('touchstart', onDragStart, { passive: true });
         document.addEventListener('touchmove', onDragMove, { passive: false });
         document.addEventListener('touchend', onDragEnd);
     }, 100);
@@ -561,20 +573,20 @@
                 </a>
                 
                 
-                <a href="/tags/%E6%9F%B3%E7%B5%AE%E9%9A%8F%E9%A3%8E%E8%B5%B7/" title="柳絮随风起: 2">
+                <a href="/tags/%E8%9E%8D%E5%B8%BD%E5%AD%90/" title="融帽子: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            data-tagname="柳絮随风起" style="background-color: #F5EEF8;">柳絮随风起
-                        <span class="tag-length">2</span>
+                            data-tagname="融帽子" style="background-color: #F5EEF8;">融帽子
+                        <span class="tag-length">1</span>
                     </span>
                 </a>
                 
                 
-                <a href="/tags/%E8%9E%8D%E5%B8%BD%E5%AD%90/" title="融帽子: 1">
+                <a href="/tags/%E6%9F%B3%E7%B5%AE%E9%9A%8F%E9%A3%8E%E8%B5%B7/" title="柳絮随风起: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            data-tagname="融帽子" style="background-color: #D5F5E3;">融帽子
-                        <span class="tag-length">1</span>
+                            data-tagname="柳絮随风起" style="background-color: #D5F5E3;">柳絮随风起
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
