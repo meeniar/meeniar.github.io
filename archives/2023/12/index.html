@@ -53,7 +53,84 @@
 <meta name="generator" content="Hexo 8.1.1"></head>
 
 
-<body>
+<body data-music-page="false">
+    
+        <div id="persistent-music-player" data-music-page="false">
+            <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+
+    #persistent-music-player,
+    #persistent-music-player > div,
+    #persistent-music-player .row,
+    #persistent-music-player meting-js,
+    #persistent-music-player .aplayer.aplayer-fixed {
+        background: transparent !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+
+    #persistent-music-player .aplayer.aplayer-fixed .aplayer-body {
+        bottom: 20vh !important;
+    }
+
+    #persistent-music-player .aplayer.aplayer-fixed .aplayer-list {
+        bottom: calc(20vh + 66px) !important;
+        margin: 0 !important;
+        transform: none !important;
+    }
+
+    #persistent-music-player .aplayer.aplayer-fixed .aplayer-lrc {
+        bottom: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="persistent-meting-player col l8 offset-l2 m10 offset-m1 s12"
+                   data-persistent-player="true"
+                   server="netease"
+                   type="playlist"
+                   id="6907390268"
+                   fixed='true'
+                   autoplay='true'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.5'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+        </div>
+    
+
+    <div id="site-page-content">
     <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
@@ -390,56 +467,6 @@
 
 
     <footer class="page-footer bg-color">
-    
-        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
-<style>
-    .aplayer .aplayer-lrc p {
-        
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 16px !important;
-    }
-
-    .aplayer .aplayer-lrc p.aplayer-lrc-current {
-        
-        font-size: 15px;
-        color: #42b983;
-    }
-
-    
-
-    /* 手机端播放器上移 1/4 */
-    @media only screen and (max-width: 600px) {
-        .aplayer.aplayer-fixed {
-            bottom: 25vh !important;
-        }
-    }
-</style>
-<div class="">
-    
-    <div class="row">
-        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
-                   server="netease"
-                   type="playlist"
-                   id="6907390268"
-                   fixed='true'
-                   autoplay='true'
-                   theme='#42b983'
-                   loop='all'
-                   order='random'
-                   preload='auto'
-                   volume='0.5'
-                   list-folded='true'
-        >
-        </meting-js>
-    </div>
-</div>
-
-<script src="/libs/aplayer/APlayer.min.js"></script>
-<script src="/libs/aplayer/Meting.min.js"></script>
-
-    
-
     <div class="container row center-align"
          style="margin-bottom: 15px !important;">
         <div class="col s12 m8 l8 copy-right">
@@ -543,6 +570,7 @@
 
 <div class="progress-bar"></div>
 
+    </div>
 
     <!-- 搜索遮罩框 -->
 <div id="searchModal" class="modal">
@@ -750,6 +778,133 @@ $(function () {
 
     
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    
+    <script>
+        (function () {
+            var navigating = false;
+            var containerId = 'site-page-content';
+
+            function isMusicPage(doc) {
+                return doc.body && doc.body.getAttribute('data-music-page') === 'true';
+            }
+
+            var musicPagePauseTimer;
+
+            function stopPersistentPlayer() {
+                var playerContainer = document.getElementById('persistent-music-player');
+                if (!playerContainer) return;
+
+                // 方法1：通过 meting-js 元素的 aplayer 属性获取实例
+                var metingElement = playerContainer.querySelector('meting-js[data-persistent-player="true"]');
+                if (metingElement && metingElement.aplayer && typeof metingElement.aplayer.pause === 'function') {
+                    metingElement.aplayer.pause();
+                }
+
+                // 方法2：通过 window.aplayers 获取所有实例并暂停首页播放器
+                if (window.aplayers && window.aplayers.length) {
+                    window.aplayers.forEach(function (instance) {
+                        if (instance && instance.container && playerContainer.contains(instance.container) && typeof instance.pause === 'function') {
+                            instance.pause();
+                        }
+                    });
+                }
+
+                // 方法3：直接暂停所有音频元素
+                Array.prototype.forEach.call(playerContainer.querySelectorAll('audio'), function (audio) {
+                    audio.autoplay = false;
+                    audio.removeAttribute('autoplay');
+                    audio.pause();
+                });
+
+                // 方法4：尝试通过 .aplayer 类获取实例（兼容性）
+                var aplayerDiv = playerContainer.querySelector('.aplayer');
+                if (aplayerDiv && aplayerDiv.aplayer && typeof aplayerDiv.aplayer.pause === 'function') {
+                    aplayerDiv.aplayer.pause();
+                }
+            }
+
+            function setMusicPageState(onMusicPage) {
+                var player = document.getElementById('persistent-music-player');
+                document.body.setAttribute('data-music-page', onMusicPage ? 'true' : 'false');
+                window.clearInterval(musicPagePauseTimer);
+                if (!player) return;
+                player.setAttribute('data-music-page', onMusicPage ? 'true' : 'false');
+                if (onMusicPage) {
+                    stopPersistentPlayer();
+                    musicPagePauseTimer = window.setInterval(stopPersistentPlayer, 100);
+                }
+            }
+
+            document.addEventListener('play', function (event) {
+                var target = event.target;
+                if (document.body.getAttribute('data-music-page') === 'true' && target.closest && target.closest('#persistent-music-player')) {
+                    target.pause();
+                }
+            }, true);
+
+            function runScripts(root) {
+                Array.prototype.forEach.call(root.querySelectorAll('script'), function (oldScript) {
+                    var script = document.createElement('script');
+                    Array.prototype.forEach.call(oldScript.attributes, function (attr) {
+                        script.setAttribute(attr.name, attr.value);
+                    });
+                    script.text = oldScript.text;
+                    oldScript.parentNode.replaceChild(script, oldScript);
+                });
+            }
+
+            function navigate(url, push) {
+                if (navigating) return;
+                navigating = true;
+                fetch(url, { credentials: 'same-origin' })
+                    .then(function (response) {
+                        if (!response.ok) throw new Error('Navigation failed');
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        var next = new DOMParser().parseFromString(html, 'text/html');
+                        var nextContent = next.getElementById(containerId);
+                        var currentContent = document.getElementById(containerId);
+                        if (!nextContent || !currentContent) {
+                            window.location.href = url;
+                            return;
+                        }
+                        currentContent.innerHTML = nextContent.innerHTML;
+                        document.title = next.title;
+                        setMusicPageState(isMusicPage(next));
+                        if (push) history.pushState({}, '', url);
+                        window.scrollTo(0, 0);
+                        runScripts(currentContent);
+                        document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true }));
+                    })
+                    .catch(function () { window.location.href = url; })
+                    .finally(function () { navigating = false; });
+            }
+
+            document.addEventListener('click', function (event) {
+                var link = event.target.closest && event.target.closest('a[href]');
+                if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                var url = new URL(link.href, window.location.href);
+                if (url.origin !== window.location.origin || link.target || link.hasAttribute('download') || url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
+                if (/\/musics\/?$/.test(url.pathname)) {
+                    document.body.setAttribute('data-music-page', 'true');
+                    Array.prototype.forEach.call(document.querySelectorAll('audio'), function (audio) {
+                        audio.pause();
+                    });
+                    stopPersistentPlayer();
+                    window.clearInterval(musicPagePauseTimer);
+                    musicPagePauseTimer = window.setInterval(stopPersistentPlayer, 50);
+                }
+                event.preventDefault();
+                navigate(url.href, true);
+            });
+
+            window.addEventListener('popstate', function () { navigate(window.location.href, false); });
+            setMusicPageState(document.body.getAttribute('data-music-page') === 'true');
+        })();
+    </script>
     
 
 </body>
