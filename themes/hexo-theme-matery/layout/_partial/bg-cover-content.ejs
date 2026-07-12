@@ -37,13 +37,14 @@
 
 <% if (theme.banner.enable) { %>
 <script>
-    // 每天切换 banner 图.  Switch banner image every day.
-    var bannerUrl = "<%- theme.jsDelivr.url %><%- url_for('/medias/banner/') %>" + new Date().getDay() + '.jpg';
-    $('.bg-cover').css('background-image', 'url(' + bannerUrl + ')');
-</script>
-<script>
-    <% if (theme.banner.enable && theme.banner.random) { %>
-      var bannerUrl = "<%- theme.jsDelivr.url %><%- url_for('/medias/featureimages/') %>" + Math.floor(Math.random() * <%- theme.featureImages.length %>) + '.jpg';
+    <% if (theme.banner.enable && theme.banner.random && theme.featureImages && theme.featureImages.length > 0) { %>
+      // 从 featureImages 数组中随机选择一张图片
+      var featureImages = [
+        <% theme.featureImages.forEach(function(item){%>
+          "<%= item %>",
+        <% }) %>
+      ];
+      var bannerUrl = "<%- theme.jsDelivr.url %>" + featureImages[Math.floor(Math.random() * featureImages.length)];
     <% } else { %>
       // 每天切换 banner 图.  Switch banner image every day.
       var bannerUrl = "<%- theme.jsDelivr.url %><%- url_for('/medias/banner/') %>" + new Date().getDay() + '.jpg';
