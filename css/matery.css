@@ -10,17 +10,16 @@
         display: none !important;
     }
 
-    /* 移动端 logo 文字居中 */
+    /* 移动端 logo 居中，但不覆盖左右按钮 */
     header .brand-logo {
+        position: absolute !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 100% !important;
+        width: auto !important;
     }
 
     header .brand-logo .logo-span {
-        width: 100% !important;
-        text-align: center !important;
-        display: block !important;
+        display: inline !important;
     }
 }
 
