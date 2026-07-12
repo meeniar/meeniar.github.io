@@ -91,12 +91,14 @@
     }
 
     #persistent-music-player .aplayer.aplayer-fixed .aplayer-body {
-        bottom: 20vh !important;
+        bottom: 20vh;
+        left: 0;
     }
 
     #persistent-music-player .aplayer.aplayer-fixed .aplayer-list {
-        bottom: calc(20vh + 66px) !important;
-        margin: 0 !important;
+        bottom: calc(20vh + 66px);
+        left: 0;
+        margin: 0;
         transform: none !important;
     }
 
@@ -129,6 +131,166 @@
 
 <script src="/libs/aplayer/APlayer.min.js"></script>
 <script src="/libs/aplayer/Meting.min.js"></script>
+
+<script>
+(function() {
+    // 等待播放器初始化完成
+    var initTimer = setInterval(function() {
+        var playerContainer = document.getElementById('persistent-music-player');
+        if (!playerContainer) return;
+
+        var aplayerBody = playerContainer.querySelector('.aplayer.aplayer-fixed .aplayer-body');
+        var aplayerList = playerContainer.querySelector('.aplayer.aplayer-fixed .aplayer-list');
+        var aplayerButton = playerContainer.querySelector('.aplayer-button');
+
+        if (!aplayerBody) return;
+
+        clearInterval(initTimer);
+
+        // 添加拖拽样式和过渡动画
+        aplayerBody.style.cursor = 'grab';
+        aplayerBody.style.userSelect = 'none';
+        aplayerBody.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+        if (aplayerList) {
+            aplayerList.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+        }
+        if (aplayerButton) {
+            aplayerButton.style.cursor = 'pointer';
+        }
+
+        // 拖拽状态
+        var isDragging = false;
+        var startX, startY;
+        var startBottom;
+        var currentBottom = 20; // vh 单位，始终在左侧
+
+        // 更新播放器和列表位置（垂直方向）
+        function updateVerticalPosition(bottomVh) {
+            bottomVh = Math.max(5, Math.min(bottomVh, 90));
+            currentBottom = bottomVh;
+
+            // 始终在左侧
+            aplayerBody.style.left = '0px';
+            aplayerBody.style.bottom = bottomVh + 'vh';
+
+            if (aplayerList) {
+                aplayerList.style.left = '0px';
+                aplayerList.style.bottom = 'calc(' + bottomVh + 'vh + 66px)';
+            }
+
+            // 只保存垂直位置
+            try {
+                localStorage.setItem('aplayer_bottom', bottomVh);
+            } catch(e) {}
+        }
+
+        // 拖拽时的临时位置（允许左右移动）
+        function setDragPosition(leftPx, bottomVh) {
+            var maxLeft = window.innerWidth - 66;
+            leftPx = Math.max(0, Math.min(leftPx, maxLeft));
+            bottomVh = Math.max(5, Math.min(bottomVh, 90));
+
+            // 拖拽时禁用过渡动画
+            aplayerBody.style.transition = 'none';
+            if (aplayerList) {
+                aplayerList.style.transition = 'none';
+            }
+
+            aplayerBody.style.left = leftPx + 'px';
+            aplayerBody.style.bottom = bottomVh + 'vh';
+
+            if (aplayerList) {
+                aplayerList.style.left = leftPx + 'px';
+                aplayerList.style.bottom = 'calc(' + bottomVh + 'vh + 66px)';
+            }
+        }
+
+        // 吸附回左侧
+        function snapToLeft(bottomVh) {
+            // 启用过渡动画
+            aplayerBody.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+            if (aplayerList) {
+                aplayerList.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+            }
+
+            updateVerticalPosition(bottomVh);
+        }
+
+        // 恢复保存的位置
+        function restorePosition() {
+            try {
+                var savedBottom = localStorage.getItem('aplayer_bottom');
+                if (savedBottom) {
+                    updateVerticalPosition(parseFloat(savedBottom));
+                }
+            } catch(e) {}
+        }
+
+        setTimeout(restorePosition, 500);
+
+        // 鼠标/触摸事件处理
+        function onDragStart(e) {
+            if (e.target.closest && e.target.closest('.aplayer-button')) return;
+            if (e.target.classList && e.target.classList.contains('aplayer-button')) return;
+
+            isDragging = true;
+            aplayerBody.style.cursor = 'grabbing';
+            startBottom = currentBottom;
+
+            if (e.type === 'touchstart') {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            } else {
+                startX = e.clientX;
+                startY = e.clientY;
+            }
+
+            e.preventDefault();
+        }
+
+        function onDragMove(e) {
+            if (!isDragging) return;
+
+            var clientX, clientY;
+            if (e.type === 'touchmove') {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            var deltaX = clientX - startX;
+            var deltaY = startY - clientY;
+
+            var vhPerPixel = 100 / window.innerHeight;
+            var deltaVh = deltaY * vhPerPixel;
+
+            setDragPosition(deltaX, startBottom + deltaVh);
+            e.preventDefault();
+        }
+
+        function onDragEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            aplayerBody.style.cursor = 'grab';
+
+            // 获取当前拖拽后的垂直位置
+            var currentBottomVh = parseFloat(aplayerBody.style.bottom) || currentBottom;
+            snapToLeft(currentBottomVh);
+        }
+
+        // 绑定事件
+        aplayerBody.addEventListener('mousedown', onDragStart);
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('mouseup', onDragEnd);
+
+        aplayerBody.addEventListener('touchstart', onDragStart, { passive: false });
+        document.addEventListener('touchmove', onDragMove, { passive: false });
+        document.addEventListener('touchend', onDragEnd);
+    }, 100);
+})();
+</script>
 
         </div>
     
@@ -1109,13 +1271,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2026/06/29/2026-%E6%83%85%E7%BB%AA/">
+                <a href="/2026/06/29/2026-%E7%BD%AE%E9%A1%B6%E9%97%AE%E9%A2%98/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/202606%E5%A4%A9%E6%B4%A5.jpg" class="responsive-img" alt="情绪">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="我的问题">
                         
-                        <span class="card-title">情绪</span>
+                        <span class="card-title">我的问题</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1139,8 +1301,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%83%85%E7%BB%AA/">
-                        <span class="chip bg-color">情绪</span>
+                    <a href="/tags/%E6%88%91%E7%9A%84%E9%97%AE%E9%A2%98/">
+                        <span class="chip bg-color">我的问题</span>
                     </a>
                     
                 </div>

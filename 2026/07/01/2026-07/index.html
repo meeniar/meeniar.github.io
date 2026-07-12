@@ -90,12 +90,14 @@
     }
 
     #persistent-music-player .aplayer.aplayer-fixed .aplayer-body {
-        bottom: 20vh !important;
+        bottom: 20vh;
+        left: 0;
     }
 
     #persistent-music-player .aplayer.aplayer-fixed .aplayer-list {
-        bottom: calc(20vh + 66px) !important;
-        margin: 0 !important;
+        bottom: calc(20vh + 66px);
+        left: 0;
+        margin: 0;
         transform: none !important;
     }
 
@@ -128,6 +130,166 @@
 
 <script src="/libs/aplayer/APlayer.min.js"></script>
 <script src="/libs/aplayer/Meting.min.js"></script>
+
+<script>
+(function() {
+    // 等待播放器初始化完成
+    var initTimer = setInterval(function() {
+        var playerContainer = document.getElementById('persistent-music-player');
+        if (!playerContainer) return;
+
+        var aplayerBody = playerContainer.querySelector('.aplayer.aplayer-fixed .aplayer-body');
+        var aplayerList = playerContainer.querySelector('.aplayer.aplayer-fixed .aplayer-list');
+        var aplayerButton = playerContainer.querySelector('.aplayer-button');
+
+        if (!aplayerBody) return;
+
+        clearInterval(initTimer);
+
+        // 添加拖拽样式和过渡动画
+        aplayerBody.style.cursor = 'grab';
+        aplayerBody.style.userSelect = 'none';
+        aplayerBody.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+        if (aplayerList) {
+            aplayerList.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+        }
+        if (aplayerButton) {
+            aplayerButton.style.cursor = 'pointer';
+        }
+
+        // 拖拽状态
+        var isDragging = false;
+        var startX, startY;
+        var startBottom;
+        var currentBottom = 20; // vh 单位，始终在左侧
+
+        // 更新播放器和列表位置（垂直方向）
+        function updateVerticalPosition(bottomVh) {
+            bottomVh = Math.max(5, Math.min(bottomVh, 90));
+            currentBottom = bottomVh;
+
+            // 始终在左侧
+            aplayerBody.style.left = '0px';
+            aplayerBody.style.bottom = bottomVh + 'vh';
+
+            if (aplayerList) {
+                aplayerList.style.left = '0px';
+                aplayerList.style.bottom = 'calc(' + bottomVh + 'vh + 66px)';
+            }
+
+            // 只保存垂直位置
+            try {
+                localStorage.setItem('aplayer_bottom', bottomVh);
+            } catch(e) {}
+        }
+
+        // 拖拽时的临时位置（允许左右移动）
+        function setDragPosition(leftPx, bottomVh) {
+            var maxLeft = window.innerWidth - 66;
+            leftPx = Math.max(0, Math.min(leftPx, maxLeft));
+            bottomVh = Math.max(5, Math.min(bottomVh, 90));
+
+            // 拖拽时禁用过渡动画
+            aplayerBody.style.transition = 'none';
+            if (aplayerList) {
+                aplayerList.style.transition = 'none';
+            }
+
+            aplayerBody.style.left = leftPx + 'px';
+            aplayerBody.style.bottom = bottomVh + 'vh';
+
+            if (aplayerList) {
+                aplayerList.style.left = leftPx + 'px';
+                aplayerList.style.bottom = 'calc(' + bottomVh + 'vh + 66px)';
+            }
+        }
+
+        // 吸附回左侧
+        function snapToLeft(bottomVh) {
+            // 启用过渡动画
+            aplayerBody.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+            if (aplayerList) {
+                aplayerList.style.transition = 'left 0.3s ease, bottom 0.15s ease';
+            }
+
+            updateVerticalPosition(bottomVh);
+        }
+
+        // 恢复保存的位置
+        function restorePosition() {
+            try {
+                var savedBottom = localStorage.getItem('aplayer_bottom');
+                if (savedBottom) {
+                    updateVerticalPosition(parseFloat(savedBottom));
+                }
+            } catch(e) {}
+        }
+
+        setTimeout(restorePosition, 500);
+
+        // 鼠标/触摸事件处理
+        function onDragStart(e) {
+            if (e.target.closest && e.target.closest('.aplayer-button')) return;
+            if (e.target.classList && e.target.classList.contains('aplayer-button')) return;
+
+            isDragging = true;
+            aplayerBody.style.cursor = 'grabbing';
+            startBottom = currentBottom;
+
+            if (e.type === 'touchstart') {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            } else {
+                startX = e.clientX;
+                startY = e.clientY;
+            }
+
+            e.preventDefault();
+        }
+
+        function onDragMove(e) {
+            if (!isDragging) return;
+
+            var clientX, clientY;
+            if (e.type === 'touchmove') {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            var deltaX = clientX - startX;
+            var deltaY = startY - clientY;
+
+            var vhPerPixel = 100 / window.innerHeight;
+            var deltaVh = deltaY * vhPerPixel;
+
+            setDragPosition(deltaX, startBottom + deltaVh);
+            e.preventDefault();
+        }
+
+        function onDragEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            aplayerBody.style.cursor = 'grab';
+
+            // 获取当前拖拽后的垂直位置
+            var currentBottomVh = parseFloat(aplayerBody.style.bottom) || currentBottom;
+            snapToLeft(currentBottomVh);
+        }
+
+        // 绑定事件
+        aplayerBody.addEventListener('mousedown', onDragStart);
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('mouseup', onDragEnd);
+
+        aplayerBody.addEventListener('touchstart', onDragStart, { passive: false });
+        document.addEventListener('touchmove', onDragMove, { passive: false });
+        document.addEventListener('touchend', onDragEnd);
+    }, 100);
+})();
+</script>
 
         </div>
     
@@ -376,7 +538,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    13.5k
+                    14.4k
                 </div>
                 
 
@@ -1068,7 +1230,30 @@
 <p>她说都到这个时候了，再解释也没有什么意义了，我已经等了很久了，也失望了很久，我一直希望你能理解我，直到最后，你还停留在说吵架，你也根本不会理解我，我也不需要你理解我了，我已经没有力气再期待了</p>
 <p>“我”：一直以来，好像都是她一个人在努力，当一个人努力了很久，期待了很久，却始终得不到回应的时候，慢慢就不会再期待了，而当时的我，只知道结束了，却还没意识到，这是她一次次努力、一次次失望，最后一点点累积出来的绝望</p>
 <p>我花了三天时间，才将这篇对话一点点整理完，我开始意识到，她当时承受了很多的痛苦，还有很多的委屈、失望和疲惫。可我却还是没办法真正感同身受，我只能反复回头看，希望自己能离她的感受更近一点，我觉得自己是不是无可救药，为什么她都已经说的这么清楚了，我还是看不见。</p>
-<h2 id="2026-07-12-周日"><a href="#2026-07-12-周日" class="headerlink" title="2026-07-12 周日"></a>2026-07-12 周日</h2>
+<h2 id="2026-07-12-周日"><a href="#2026-07-12-周日" class="headerlink" title="2026-07-12 周日"></a>2026-07-12 周日</h2><p>昨晚睡的很晚，却没有做任何的梦。</p>
+<p>我的情绪好像越来越平静，又感觉像是暴风雨前的宁静。</p>
+<p>我感觉，很多东西都在慢慢变淡了。那些铺天盖地的思念和痛苦又慢慢退回到了心底深处。</p>
+<p>我突然意识到，当初第一次分手时我一直以为她说的冷暴力是因为我老是打游戏，不搭理她，所以我戒掉了游戏，也几乎秒回她的消息，我以为这样就不会让她没有安全感了。然而我却没有认真去思考，她口中的冷暴力究竟是什么。</p>
+<p>我一直都牢牢记着她的消息必须要回复，关于她的争吵也必须要回复，我以为这样就不会再让她觉得我在冷暴力她。后来才明白，我记住的只是要回复消息这件事，却没有真正理解她的感受。其实真正重要的是在这段时间不断意识到的在她难过的时候，我没有回应她的情绪；在她委屈的时候，我没有靠近她；在她一次次表达失望的时候，我总是在解释自己，逃避问题。她一次次渴望我改变的不是我的行为，而是我面对她感受时的方式。</p>
+<p>经常性练习：</p>
+<p>1、他人的感受：事实+情绪+猜测原因+如果我是他</p>
+<p>今天星期日，继续窝着</p>
+<p>2、我的感受：发生了什么+我的情绪+身体感受+我需要什么</p>
+<p>今天的情绪异常平静，我不知道这是慢慢放下了，还是只是暂时平静，我总觉得自己的脑袋不太清醒，像隔着一层雾一样，看什么都有点迟钝。</p>
+<p>3、接住情绪：先看到情绪</p>
+<p>她说：今天跟别人说了一件事情，他们都觉得没什么，可能真的是我太矫情了吧。</p>
+<p>我：说出的话没有人在意，宝宝是不是觉得有一点委屈？要是宝宝愿意，可以说给我听</p>
+<p>建议：多重点关注她，增加 我想知道让你难受的是什么</p>
+<p>4、表达欣赏：夸观察到的细节</p>
+<p>场景：你们吵架以后，她还是主动来找你沟通。</p>
+<p>我：宝宝你来了，才刚吵完架你就主动过来找我沟通，而我却还在跟你发脾气，谢谢宝宝这么看重我们的关系，我也很喜欢宝宝，对不起，刚刚让你难过了。</p>
+<p>建议：真正值得被看见的其实是她也受伤了但是还愿意修复关系</p>
+<p>宝宝，明明刚刚吵得那么难过，你还是愿意主动来找我。我知道这不是因为你不委屈，而是因为你一直很珍惜我们的关系。谢谢你没有放弃，一直努力靠近我。</p>
+<p>5、返回避：今天什么时候想沉默或者逃避，是否有修改空间</p>
+<p>我觉得还有很多没想明白的地方，哪怕现在想来想去好像也还是没有学会到底应该如何回应，这些练习也并不是真实的场景，我是不是应该多注意一些生活中的场景，虽然我基本上不会遇到什么人。</p>
+<p>6、表达爱意</p>
+<p>宝宝估计还在睡觉吧？因为好久没有在宝宝睡觉的时候陪在她身边了，有一点点怀念了</p>
+
                 
             </div>
             <hr/>
@@ -1151,13 +1336,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2026/06/29/2026-%E7%BD%AE%E9%A1%B6%E9%97%AE%E9%A2%98/">
+                <a href="/2026/06/29/2026-%E6%83%85%E7%BB%AA/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="我的问题">
+                        <img src="/medias/featureimages/202606%E5%A4%A9%E6%B4%A5.jpg" class="responsive-img" alt="情绪">
                         
-                        <span class="card-title">我的问题</span>
+                        <span class="card-title">情绪</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1181,8 +1366,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%88%91%E7%9A%84%E9%97%AE%E9%A2%98/">
-                        <span class="chip bg-color">我的问题</span>
+                    <a href="/tags/%E6%83%85%E7%BB%AA/">
+                        <span class="chip bg-color">情绪</span>
                     </a>
                     
                 </div>
