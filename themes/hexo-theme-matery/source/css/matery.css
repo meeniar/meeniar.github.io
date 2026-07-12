@@ -309,16 +309,16 @@ header .brand-logo .waves-effect {
     vertical-align: top;
 }
 
-/*移动端 logo 图标和文字重叠布局*/
+/*移动端 logo 图标和文字布局*/
 @media only screen and (max-width: 601px) {
     header .brand-logo {
         display: flex !important;
         align-items: center !important;
         white-space: nowrap !important;
         position: absolute !important;
-        left: 0 !important;
-        transform: none !important;
-        padding-left: 10px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        padding-left: 0 !important;
     }
 
     header .brand-logo .waves-effect {
@@ -329,14 +329,16 @@ header .brand-logo .waves-effect {
 
     header .brand-logo .logo-img {
         height: 32px !important;
-        margin-right: -10px !important;
+        margin-right: 2px !important;
         vertical-align: middle !important;
         padding-bottom: 0 !important;
+        display: inline-block !important;
     }
 
     header .brand-logo .logo-span {
         font-size: 1.2rem !important;
         margin-left: 0 !important;
+        display: inline-block !important;
     }
 }
 
