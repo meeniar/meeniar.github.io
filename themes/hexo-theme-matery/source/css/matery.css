@@ -4,6 +4,11 @@
     .container {
         width: 95%;
     }
+
+    /* 移动端隐藏 logo 图标，只显示文字，避免换行 */
+    header .brand-logo .logo-img {
+        display: none;
+    }
 }
 
 /*中等屏幕下(平板类)的样式*/
@@ -302,6 +307,32 @@ header .brand-logo .logo-span {
 /*修改顶部 logo 的文字垂直对齐为 top，避免默认 middle 看起来偏下*/
 header .brand-logo .waves-effect {
     vertical-align: top;
+}
+
+/*移动端 logo 图标和文字重叠布局*/
+@media only screen and (max-width: 601px) {
+    header .brand-logo {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    header .brand-logo .waves-effect {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+    }
+
+    header .brand-logo .logo-img {
+        height: 38px;
+        margin-right: -8px;
+        vertical-align: middle;
+    }
+
+    header .brand-logo .logo-span {
+        font-size: 1.3rem;
+        margin-left: 0;
+    }
 }
 
 header .button-collapse i {
