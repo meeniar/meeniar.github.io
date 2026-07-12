@@ -9,6 +9,12 @@
     header .brand-logo .logo-img {
         display: none;
     }
+
+    /* 移动端 logo 文字居中 */
+    header .brand-logo .logo-span {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 /*中等屏幕下(平板类)的样式*/
