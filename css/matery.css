@@ -7,19 +7,7 @@
 
     /* 移动端隐藏 logo 图标，只显示文字，避免换行 */
     header .brand-logo .logo-img {
-        display: none !important;
-    }
-
-    /* 移动端 logo 居中，但不覆盖左右按钮 */
-    header .brand-logo {
-        position: absolute !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: auto !important;
-    }
-
-    header .brand-logo .logo-span {
-        display: inline !important;
+        display: none;
     }
 }
 
