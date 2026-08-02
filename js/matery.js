@@ -72,7 +72,8 @@ $(function () {
     let articleInit = function () {
         $('#articleContent a').attr('target', '_blank');
 
-        $('#articleContent img').each(function () {
+        // Chat exports use dated sections and manage their own image layout.
+        $('#articleContent img').not('section[data-date] img').each(function () {
             let imgPath = $(this).attr('src');
             $(this).wrap('<div class="img-item" data-src="' + imgPath + '" data-sub-html=".caption"></div>');
             // 图片添加阴影
