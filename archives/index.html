@@ -328,7 +328,6 @@
       <i class="fas fa-home" style="zoom: 0.6;"></i>
       
       <span>首页</span>
-      
     </a>
     
   </li>
@@ -340,7 +339,6 @@
       <i class="fas fa-tags" style="zoom: 0.6;"></i>
       
       <span>标签</span>
-      
     </a>
     
   </li>
@@ -352,7 +350,6 @@
       <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
       
       <span>分类</span>
-      
     </a>
     
   </li>
@@ -364,7 +361,6 @@
       <i class="fas fa-archive" style="zoom: 0.6;"></i>
       
       <span>归档</span>
-      
     </a>
     
   </li>
@@ -376,9 +372,6 @@
       <i class="fas fa-history" style="zoom: 0.6;"></i>
       
       <span>更新</span>
-      
-      <span class="nav-update-dot" data-latest-update="2026-08-04" title="最近有更新" hidden></span>
-      
     </a>
     
   </li>
@@ -390,7 +383,6 @@
       <i class="fas fa-music" style="zoom: 0.6;"></i>
       
       <span>音乐</span>
-      
     </a>
     
   </li>
@@ -402,7 +394,6 @@
       <i class="fas fa-images" style="zoom: 0.6;"></i>
       
       <span>相册</span>
-      
     </a>
     
   </li>
@@ -443,7 +434,6 @@
 			    <i class="fa-fw fas fa-home"></i>
 			
 			首页
-			
 		</a>
           
         </li>
@@ -455,7 +445,6 @@
 			    <i class="fa-fw fas fa-tags"></i>
 			
 			标签
-			
 		</a>
           
         </li>
@@ -467,7 +456,6 @@
 			    <i class="fa-fw fas fa-bookmark"></i>
 			
 			分类
-			
 		</a>
           
         </li>
@@ -479,7 +467,6 @@
 			    <i class="fa-fw fas fa-archive"></i>
 			
 			归档
-			
 		</a>
           
         </li>
@@ -491,9 +478,6 @@
 			    <i class="fa-fw fas fa-history"></i>
 			
 			更新
-			
-			<span class="nav-update-dot" data-latest-update="true" title="最近有更新" hidden></span>
-			
 		</a>
           
         </li>
@@ -505,7 +489,6 @@
 			    <i class="fa-fw fas fa-music"></i>
 			
 			音乐
-			
 		</a>
           
         </li>
@@ -517,7 +500,6 @@
 			    <i class="fa-fw fas fa-images"></i>
 			
 			相册
-			
 		</a>
           
         </li>
@@ -525,20 +507,6 @@
         
     </ul>
 </div>
-
-
-
-<script>
-  (function () {
-    var latest = new Date('2026-08-04T00:00:00');
-    var age = Date.now() - latest.getTime();
-    var isRecent = age >= 0 && age <= 14 * 24 * 60 * 60 * 1000;
-    if (!isRecent) return;
-    document.querySelectorAll('.nav-update-dot[data-latest-update]').forEach(function (dot) {
-      dot.hidden = false;
-    });
-  })();
-</script>
 
 
         </div>
@@ -1897,29 +1865,11 @@ $(function () {
         </script>
     
 
-     
-        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
-        <script src="/libs/others/TencentCaptcha.js"></script>
-        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
     
 
     <!-- Baidu Analytics -->
 
     <!-- Baidu Push -->
-
-<script>
-    (function () {
-        var bp = document.createElement('script');
-        var curProtocol = window.location.protocol.split(':')[0];
-        if (curProtocol === 'https') {
-            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-        } else {
-            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-        }
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(bp, s);
-    })();
-</script>
 
     
     <script src="/libs/others/clicklove.js" async="async"></script>
