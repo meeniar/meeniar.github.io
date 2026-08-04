@@ -1,0 +1,40 @@
+# Required: date, type, title. Optional link fields: link, link_description.
+# Types: feature, improvement, fix, content.
+- date: "2026-08-04"
+  type: feature
+  title: 新增站点更新日志
+  description: 增加独立更新页面，以时间轴记录站点功能、内容与体验变化。
+  link: /changelog/
+  link_description: 更新日志
+
+- date: "2026-08-04"
+  type: fix
+  title: 修复主题音乐歌单显示
+  description: 修复音乐页面中歌单无法正常展示的问题。
+  link: /musics/
+  link_description: 音乐
+
+- date: "2026-08-03"
+  type: feature
+  title: 扩展本地音乐播放
+  description: 完善会员曲目与本地音源的播放支持。
+  link: /musics/
+  link_description: 音乐
+
+- date: "2026-08-01"
+  type: fix
+  title: 修复页面刷新后的图片展示
+  description: 修复部分文章图片在刷新后布局异常的问题。
+
+
+- date: "2026-07-12"
+  type: feature
+  title: 主题音乐可拖拽、自动播放
+
+
+- date: "2026-07-11"
+  type: feature
+  title: 新增相册
+
+
+
