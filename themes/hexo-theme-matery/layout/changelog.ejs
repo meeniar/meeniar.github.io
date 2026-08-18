@@ -1,0 +1,114 @@
+<%
+    var typeMap = {
+        feature: { label: '新增', icon: 'fas fa-plus' },
+        improvement: { label: '优化', icon: 'fas fa-sliders-h' },
+        fix: { label: '修复', icon: 'fas fa-wrench' },
+        content: { label: '内容', icon: 'fas fa-pen-nib' }
+    };
+    var rawEntries = Array.isArray(site.data.changelog) ? site.data.changelog : [];
+    var entries = rawEntries.map(function (entry, index) {
+        var date = String(entry.date || '');
+        return Object.assign({}, entry, { _date: date, _index: index });
+    }).sort(function (a, b) {
+        var dateOrder = b._date.localeCompare(a._date);
+        return dateOrder !== 0 ? dateOrder : a._index - b._index;
+    });
+    var groups = [];
+    entries.forEach(function (entry) {
+        var monthKey = entry._date.slice(0, 7);
+        var group = groups[groups.length - 1];
+        if (!group || group.key !== monthKey) {
+            group = { key: monthKey, entries: [] };
+            groups.push(group);
+        }
+        group.entries.push(entry);
+    });
+    var currentYear = String(new Date().getFullYear());
+    var currentYearCount = entries.filter(function (entry) {
+        return entry._date.slice(0, 4) === currentYear;
+    }).length;
+    var latestDate = entries.length > 0 ? entries[0]._date : '--';
+%>
+
+<div class="bg-cover pd-header changelog-cover" style="background-image: url('<%- theme.jsDelivr.url %><%- url_for('/medias/banner/0.jpg') %>');">
+    <div class="container changelog-hero">
+        <p class="changelog-kicker">CHANGELOG</p>
+        <h1>更新日志</h1>
+        <p>记录站点每一次值得留下的变化</p>
+    </div>
+</div>
+
+<main class="content changelog-content">
+    <div class="container changelog-container">
+        <header class="changelog-overview">
+            <div>
+                <h2>一路生长，也一路记录</h2>
+                <p>功能、内容与体验变化均按时间倒序整理。</p>
+            </div>
+            <dl class="changelog-stats" aria-label="更新日志概览">
+                <div>
+                    <dt><%= entries.length %></dt>
+                    <dd>全部更新</dd>
+                </div>
+                <div>
+                    <dt><%= currentYearCount %></dt>
+                    <dd>今年更新</dd>
+                </div>
+                <div>
+                    <dt><%= latestDate %></dt>
+                    <dd>最近更新</dd>
+                </div>
+            </dl>
+        </header>
+
+        <% if (groups.length > 0) { %>
+        <div class="changelog-stream">
+            <% groups.forEach(function (group) { %>
+            <section class="changelog-month" aria-labelledby="month-<%= group.key %>">
+                <header class="changelog-month-header">
+                    <h2 id="month-<%= group.key %>"><%= group.key.slice(0, 4) %> 年 <%= group.key.slice(5, 7) %> 月</h2>
+                    <span><%= group.entries.length %> 条更新</span>
+                </header>
+
+                <ol class="changelog-list">
+                    <% group.entries.forEach(function (entry) {
+                        var type = typeMap[entry.type] || { label: '记录', icon: 'fas fa-circle' };
+                        var day = entry._date.slice(8, 10);
+                        var month = entry._date.slice(5, 7);
+                    %>
+                    <li class="changelog-item changelog-type-<%= entry.type || 'default' %>">
+                        <time class="changelog-date" datetime="<%= entry._date %>">
+                            <strong><%= day %></strong>
+                            <span><%= month %> 月</span>
+                        </time>
+                        <span class="changelog-node" aria-hidden="true"><i class="<%= type.icon %>"></i></span>
+                        <article class="changelog-entry">
+                            <span class="changelog-type"><%= type.label %></span>
+                            <h3><%= entry.title %></h3>
+                            <% if (entry.description) { %>
+                            <p><%= entry.description %></p>
+                            <% } %>
+                            <% if (entry.link) { %>
+                            <a class="changelog-link" href="<%- url_for(entry.link) %>">
+                                <span>查看相关页面</span>
+                                <% if (entry.link_description) { %>
+                                <span class="changelog-link-target"><%= entry.link_description %></span>
+                                <% } %>
+                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                            </a>
+                            <% } %>
+                        </article>
+                    </li>
+                    <% }); %>
+                </ol>
+            </section>
+            <% }); %>
+        </div>
+        <% } else { %>
+        <div class="changelog-empty">
+            <i class="far fa-clock" aria-hidden="true"></i>
+            <p>更新记录正在整理中。</p>
+        </div>
+        <% } %>
+    </div>
+</main>

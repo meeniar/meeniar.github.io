@@ -13,6 +13,9 @@ menu:
   Archives:
     url: /archives
     icon: fas fa-archive
+  Changelog:
+    url: /changelog
+    icon: fas fa-history
   Musics:
     url: /musics
     icon: fas fa-music
@@ -375,7 +378,7 @@ livere:
 # 介绍: https://cloud.tencent.com/document/product/1110/36841
 # 管理验证码: https://console.cloud.tencent.com/captcha/graphical
 tcaptcha:
-  enable: true
+  enable: false
   appid: xxxxxxxxxx # 你的appid
 
 # The configuration of the Valine comment module is not activated by default.
@@ -458,7 +461,7 @@ baiduAnalytics:
   id:
 
 # 百度搜索资源平台提交链接
-baiduPush: true
+baiduPush: false
 
 # The used front-end library can be replaced with the corresponding CDN address as needed,
 # If the specific version is not specified below, you can use the latest version.
